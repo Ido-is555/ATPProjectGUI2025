@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="View.VictoryController"
+           stylesheets="@/css/style.css">
+
+    <VBox alignment="CENTER" spacing="20">
+        <Label text=" ניצחת!" styleClass="victory-label"/>
+        <Button text="משחק חדש" onAction="#onNewGame"/>
+    </VBox>
+</StackPane>

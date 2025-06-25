@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="View.MyViewController"
+            stylesheets="@/css/style.css">
+
+    <top>
+        <MenuBar>
+            <Menu text="File">
+                <MenuItem fx:id="menuNew"   text="New"   onAction="#onNew"/>
+                <MenuItem fx:id="menuSave"  text="Save"  onAction="#onSave"/>
+                <SeparatorMenuItem/>
+                <MenuItem fx:id="menuExit"  text="Exit"  onAction="#onExit"/>
+            </Menu>
+            <Menu text="Options">
+                <MenuItem fx:id="menuProperties" text="Properties" onAction="#onNew"/>
+            </Menu>
+            <Menu text="Help">
+                <MenuItem fx:id="menuHelp"  text="Help"/>
+                <MenuItem fx:id="menuAbout" text="About"/>
+            </Menu>
+        </MenuBar>
+    </top>
+
+    <center>
+        <Canvas fx:id="mazeCanvas" width="600" height="600"/>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" spacing="10" padding="10">
+            <Button fx:id="btnGiveUp" text="Give Up" onAction="#onGiveUp"/>
+        </HBox>
+    </bottom>
+</BorderPane>

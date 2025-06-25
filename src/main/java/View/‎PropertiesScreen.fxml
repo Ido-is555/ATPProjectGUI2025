@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="View.PropertiesController"
+      alignment="CENTER" spacing="25" stylesheets="@/css/style.css">
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Rows:"        GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="txtRows" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="80"/>
+        <Label text="Cols:"        GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="txtCols" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="80"/>
+    </GridPane>
+
+    <Button fx:id="btnPlay" text="שחק" onAction="#onPlayClicked"/>
+</VBox>

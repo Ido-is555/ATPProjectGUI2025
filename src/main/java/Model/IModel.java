@@ -2,32 +2,23 @@ package Model;
 
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
+import javafx.scene.input.KeyCode;
+
+import java.io.File;
 
 public interface IModel {
-    // --- generate a new maze with the given rows and columns ---
     void generateMaze(int rows, int columns);
-
-    // --- move the character in the given direction (UP, DOWN, LEFT, RIGHT) ---
-    void moveCharacter(String direction);
-
-    // --- return the current maze object ---
+    void moveCharacter(KeyCode direction);
     Maze getMaze();
-
-    // --- return the solution for the current maze ---
     Solution getSolution();
-
-    // --- return the current character row position ---
     int getCharacterRow();
-
-    // --- return the current character column position ---
     int getCharacterColumn();
-
-    // --- check if the character reached the goal ---
     boolean isGoalReached();
-
-    // --- solve the current maze and return the solution ---
     void solveMaze();
 
-    // --- shut down the servers (cleanup resources) ---
+    /* שמירה/טעינה לקובץ */
+    void saveMaze(File target) throws Exception;
+    void loadMaze(File source) throws Exception;
+
     void shutdown();
 }
