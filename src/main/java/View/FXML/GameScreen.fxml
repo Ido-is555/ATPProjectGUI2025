@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="View.MyViewController"
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="View.Controllers.MyViewController"
             stylesheets="@/css/style.css">
 
     <top>

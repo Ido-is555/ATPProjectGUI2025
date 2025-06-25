@@ -1,64 +1,71 @@
 package View;
 
 import algorithms.mazeGenerators.Maze;
-import algorithms.search.Solution;
 import algorithms.search.AState;
+import algorithms.search.Solution;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 public class MazeDisplayer {
 
     private final Canvas canvas;
+    private int rows, cols;
+    private double cellW, cellH;
 
     public MazeDisplayer(Canvas canvas) {
         this.canvas = canvas;
     }
 
+    /* מצייר קירות + דמות */
     public void drawMaze(Maze maze, int characterRow, int characterCol) {
         if (maze == null) return;
+
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        double h = canvas.getHeight();
-        double w = canvas.getWidth();
-        int rows = maze.getRows(), cols = maze.getColumns();
-        double cellH = h / rows, cellW = w / cols;
+        rows   = maze.getRows();
+        cols   = maze.getColumns();
+        cellH  = canvas.getHeight() / rows;
+        cellW  = canvas.getWidth()  / cols;
 
-        /* רקע */
-        gc.clearRect(0,0,w,h);
+        gc.setFill(Color.WHITE);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        /* קירות */
+        gc.setFill(Color.BLACK);
+        int[][] grid = maze.getMaze();
         for (int r = 0; r < rows; r++)
             for (int c = 0; c < cols; c++)
-                if (maze.getMaze()[r][c] == 1)
+                if (grid[r][c] == 1)
                     gc.fillRect(c * cellW, r * cellH, cellW, cellH);
 
-        /* דמות */
-        gc.setFill(javafx.scene.paint.Color.RED);
-        gc.fillOval(characterCol * cellW, characterRow * cellH,
-                    cellW, cellH);
+        gc.setFill(Color.RED);
+        gc.fillOval(characterCol * cellW, characterRow * cellH, cellW, cellH);
     }
 
+    /* מושך קו ירוק על הפתרון */
     public void drawSolution(Solution solution) {
-        if (solution == null) return;
+        if (solution == null || solution.getSolutionPath().isEmpty()) return;
+
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setStroke(javafx.scene.paint.Color.LIMEGREEN);
+        gc.setStroke(Color.LIMEGREEN);
         gc.setLineWidth(3);
 
-        double h = canvas.getHeight(), w = canvas.getWidth();
-        int rows = solution.getSolutionPath().get(0).getState().getRowIndex();
-        // נעזר ב-cell size מהציור האחרון
-        Maze dummy = new Maze(1,1); // למניעת NPE, לא באמת משתמשים
-        int cols = rows; // placeholder
-        if (solution.getSolutionPath().isEmpty()) return;
-        AState first = solution.getSolutionPath().get(0);
-        for (int i = 1; i < solution.getSolutionPath().size(); i++) {
-            AState prev = solution.getSolutionPath().get(i - 1);
-            AState curr = solution.getSolutionPath().get(i);
-            // cast מאולץ, נסמך על MazeState
-            int pr = prev.getRow(), pc = prev.getCol();
-            int cr = curr.getRow(), cc = curr.getCol();
-            double cellH = h / rows, cellW = w / cols;
-            gc.strokeLine(pc * cellW + cellW / 2, pr * cellH + cellH / 2,
-                          cc * cellW + cellW / 2, cr * cellH + cellH / 2);
+        AState prev = null;
+        for (AState curr : solution.getSolutionPath()) {
+            if (prev != null) {
+                int[] p = toRC(prev);
+                int[] c = toRC(curr);
+                gc.strokeLine(p[1] * cellW + cellW / 2,
+                              p[0] * cellH + cellH / 2,
+                              c[1] * cellW + cellW / 2,
+                              c[0] * cellH + cellH / 2);
+            }
+            prev = curr;
         }
+    }
+
+    /* מפרק "row,column" למערך int[2] */
+    private int[] toRC(AState s) {
+        String[] parts = s.getState().split(",");
+        return new int[]{ Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) };
     }
 }
