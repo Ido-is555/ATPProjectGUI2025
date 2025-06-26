@@ -14,3 +14,4 @@
 
     <Button fx:id="btnPlay" text="שחק" onAction="#onPlayClicked"/>
 </VBox>
+

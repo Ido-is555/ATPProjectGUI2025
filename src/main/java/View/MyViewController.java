@@ -1,16 +1,18 @@
 package View;
 
+import javafx.event.ActionEvent;
 import ViewModel.MyViewModel;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
-
 import java.io.File;
+import java.io.IOException;
 
 //Game Screen
 public class MyViewController implements IView {
+    private SceneManager sceneManager = new SceneManager();
 
     @FXML private MenuItem menuNew, menuSave, menuExit;
     @FXML private MenuItem menuHelp, menuAbout;
@@ -27,7 +29,13 @@ public class MyViewController implements IView {
     }
 
     /* ---------- Menu Actions ---------- */
-    @FXML private void onNew() { SceneManager.switchTo("/fxml/PropertiesScreen.fxml"); }
+    @FXML private void onNew(ActionEvent event) {
+        try {
+            sceneManager.switchToProperties(event);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @FXML private void onSave() {
         FileChooser fc = new FileChooser();
@@ -75,8 +83,12 @@ public class MyViewController implements IView {
         displayer.drawSolution(viewModel.getSolution());
     }
 
-    @Override public void displayVictory() {
-        SceneManager.switchTo("/fxml/VictoryScreen.fxml");
+    @Override public void displayVictory(ActionEvent event) {
+        try {
+            sceneManager.switchToVictory(event);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override public void showError(String message) {

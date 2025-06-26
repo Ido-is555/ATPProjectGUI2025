@@ -2,15 +2,18 @@ package View;
 
 import ViewModel.MyViewModel;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.net.URL;
+import javafx.event.ActionEvent;
+import java.io.IOException;
 
 public class SceneManager {
 
     private static Stage stage;
+    private Scene scene;
+    private Parent root;
     private static MyViewModel viewModel;
 
     public static void init(Stage primary, MyViewModel vm) {
@@ -18,56 +21,36 @@ public class SceneManager {
         viewModel = vm;
     }
 
-    public static MyViewModel getViewModel() { return viewModel; }
+    //public static MyViewModel getViewModel() { return viewModel; }
 
-
-    public static void switchTo(String fxmlPath) {
-        try {
-            // הסר סלאש מוביל
-            String cleanPath = fxmlPath.startsWith("/") ? fxmlPath.substring(1) : fxmlPath;
-
-            // חפש יחסית לתיקיית src/main/java
-            Path currentPath = Paths.get("src", "main", "java", cleanPath.split("/"));
-
-            if (!Files.exists(currentPath)) {
-                System.err.println("FXML NOT FOUND: " + currentPath.toAbsolutePath());
-                return;
-            }
-
-            FXMLLoader loader = new FXMLLoader(currentPath.toUri().toURL());
-            Parent root = loader.load();
-
-            Object controller = loader.getController();
-            if (controller instanceof IView v) v.bindViewModel(viewModel);
-
-            stage.setScene(new Scene(root));
-            stage.centerOnScreen();
-            stage.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void switchToStart(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("StartScreen.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
-//    public static void switchTo(String fxmlPath) {
-//        try {
-//            URL url = SceneManager.class.getResource(fxmlPath);
-//            if (url == null) {
-//                System.err.println("FXML NOT FOUND: " + fxmlPath);   //  <<< בדיקת דיבאגר
-//                return;
-//            }
-//            FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
-//            Parent root = loader.load();
-//
-//            // אם הקונטרולר הוא IView – חבר את ה-ViewModel
-//            Object controller = loader.getController();
-//            if (controller instanceof IView v) v.bindViewModel(viewModel);
-//
-//            stage.setScene(new Scene(root));
-//            stage.centerOnScreen();
-//            stage.show();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public void switchToProperties(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("Properties.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void switchToGame(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("Game.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+    public void switchToVictory(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("Victory.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
 }

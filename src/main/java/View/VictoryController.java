@@ -1,10 +1,17 @@
 package View;
 
 import javafx.fxml.FXML;
+import javafx.event.ActionEvent;
+import java.io.IOException;
 
 public class VictoryController {
+    private SceneManager sceneManager = new SceneManager();
 
-    @FXML private void onNewGame() {
-        SceneManager.switchTo("/fxml/StartScreen.fxml");
+    @FXML private void onNewGame(ActionEvent event) {
+        try {
+            sceneManager.switchToStart(event);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
