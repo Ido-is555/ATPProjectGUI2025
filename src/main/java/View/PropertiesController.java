@@ -1,7 +1,5 @@
-package View.Controllers;
+package View;
 
-import View.IView;
-import View.SceneManager;
 import ViewModel.MyViewModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

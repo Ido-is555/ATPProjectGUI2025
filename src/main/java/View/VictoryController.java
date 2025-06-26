@@ -1,6 +1,5 @@
-package View.Controllers;
+package View;
 
-import View.SceneManager;
 import javafx.fxml.FXML;
 
 public class VictoryController {

@@ -8,16 +8,25 @@
     <groupId>com.example</groupId>
     <artifactId>ATPProjectGUI</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>ATPProjectGUI</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>5.10.2</junit.version>
         <javafx.version>17.0.6</javafx.version>
-        <maven.compiler.release>24</maven.compiler.release>
+        <junit.version>5.10.2</junit.version>
+        <maven.compiler.release>19</maven.compiler.release>
     </properties>
 
     <dependencies>
+        <!-- local ATP JAR -->
+        <dependency>
+            <groupId>local.atp</groupId>
+            <artifactId>atp-partb</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/java/ATPProjectJAR.jar</systemPath>
+        </dependency>
+
+        <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -29,14 +38,7 @@
             <version>${javafx.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>local.atp</groupId>
-            <artifactId>atp-partb</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/java/ATPProjectJAR.jar</systemPath>
-        </dependency>
-
+        <!-- JUnit -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -52,6 +54,38 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.fxml</include>
+                </includes>
+            </resource>
+            <!-- copy every *.fxml under View (keeps View/ hierarchy) -->
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>View/*.fxml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+
+            <!-- copy any CSS under View/CSS (and deeper) -->
+            <resource>
+                <directory>src/main/java/View/CSS</directory>
+                <includes>
+                    <include>**/*.css</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+
+            <!-- usual resources folder, if you ever add files there -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -70,13 +104,8 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.example.atpprojectgui/com.example.atpprojectgui.HelloApplication</mainClass>
-                            <launcher>app</launcher>
-                            <jlinkZipName>app</jlinkZipName>
-                            <jlinkImageName>app</jlinkImageName>
-                            <noManPages>true</noManPages>
-                            <stripDebug>true</stripDebug>
-                            <noHeaderFiles>true</noHeaderFiles>
+                            <!-- main class = View.main -->
+                            <mainClass>View.main</mainClass>
                         </configuration>
                     </execution>
                 </executions>
