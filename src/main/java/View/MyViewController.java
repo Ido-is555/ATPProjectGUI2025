@@ -1,8 +1,10 @@
 package View;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import ViewModel.MyViewModel;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
@@ -10,102 +12,95 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.io.IOException;
 
-//Game Screen
 public class MyViewController implements IView {
-    private SceneManager sceneManager = new SceneManager();
 
+    /* ---------- FXML controls ---------- */
     @FXML private MenuItem menuNew, menuSave, menuExit;
-    @FXML private MenuItem menuHelp, menuAbout;
-    @FXML private MenuItem menuProperties;
-    @FXML private Button btnGiveUp;
-    @FXML private Canvas mazeCanvas;
+    @FXML private MenuItem menuHelp, menuAbout, menuProperties;
+    @FXML private Button   btnGiveUp;
+    @FXML private Canvas   mazeCanvas;
 
-    private MyViewModel viewModel;
+    /* ---------- helpers ---------- */
+    private final SceneManager sceneManager = new SceneManager();
+    private MyViewModel  viewModel;
     private MazeDisplayer displayer;
 
-    @FXML private void initialize() {
+    /* ---------- init ---------- */
+    @FXML
+    private void initialize() {
         displayer = new MazeDisplayer(mazeCanvas);
+
+        // allow keyboard focus + click-to-focus
         mazeCanvas.setFocusTraversable(true);
-        javafx.application.Platform.runLater(() -> mazeCanvas.requestFocus());
         mazeCanvas.setOnMouseClicked(e -> mazeCanvas.requestFocus());
+
+        // scene-level key handler (runs after FXML is attached to a Scene)
+        Platform.runLater(() -> {
+            Scene scene = mazeCanvas.getScene();
+            if (scene != null)
+                scene.setOnKeyPressed(this::onKeyPressed);
+            mazeCanvas.requestFocus();            // initial focus
+        });
     }
 
-    /* ---------- Menu Actions ---------- */
-    @FXML private void onNew(ActionEvent event) {
-        try {
-            sceneManager.switchToProperties(event);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
+    /* ---------- menu actions ---------- */
+    @FXML private void onNew(ActionEvent e) { try { sceneManager.switchToProperties(e); } catch (Exception ex) { showError(ex.getMessage()); } }
     @FXML private void onSave() {
         FileChooser fc = new FileChooser();
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Maze (*.maze)","*.maze"));
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Maze (*.maze)", "*.maze"));
         File f = fc.showSaveDialog(menuSave.getParentPopup().getScene().getWindow());
-        if (f != null) try { viewModel.saveMaze(f); }
-        catch (Exception e){ showError(e.getMessage()); }
+        if (f != null) try { viewModel.saveMaze(f); } catch (Exception ex) { showError(ex.getMessage()); }
     }
+    @FXML private void onExit() { viewModel.shutdown(); System.exit(0); }
 
-    @FXML private void onExit() {
-        viewModel.shutdown();
-        System.exit(0);
-    }
-
-    /* ---------- Gameplay Actions ---------- */
+    /* ---------- gameplay actions ---------- */
     @FXML private void onGiveUp() { viewModel.solveMaze(); }
 
-   @FXML
+    /** unified key handler (scene-wide) */
+    @FXML
     private void onKeyPressed(KeyEvent e) {
-    viewModel.moveCharacter(e.getCode());   // מעדכן את המודל
-    displayMaze();                          // מצייר שוב מיד את המפה + שחקן
+        if (viewModel == null) return;
+        viewModel.moveCharacter(e.getCode());   // update model
+        e.consume();                            // stop MenuBar etc. from using the key
+        // draw is triggered by listeners – no need to call displayMaze() here
     }
 
-    /* ---------- IView ---------- */
-    @Override public void bindViewModel(MyViewModel vm) {
-         this.viewModel = vm;
+    /* ---------- IView binding ---------- */
+    @Override
+    public void bindViewModel(MyViewModel vm) {
+        this.viewModel = vm;
 
+        /* disable buttons when no maze */
         menuSave.disableProperty().bind(vm.mazeLoaded.not());
         btnGiveUp.disableProperty().bind(vm.mazeLoaded.not());
 
-        // draw when the maze is first generated / loaded
-        vm.mazeLoaded.addListener((o, oldV, n) -> { if (n) displayMaze(); });
+        /* draw when maze loads */
+        vm.mazeLoaded.addListener((o,ov,n)-> { if (n) displayMaze(); });
 
-        // redraw every time the character moves
-        vm.characterRow   .addListener((o, oldV, n) -> displayMaze());
-        vm.characterColumn.addListener((o, oldV, n) -> displayMaze());
+        /* redraw whenever character moves */
+        vm.characterRow   .addListener((o,ov,n)-> displayMaze());
+        vm.characterColumn.addListener((o,ov,n)-> displayMaze());
 
-        // show solution / victory screens
-        vm.solutionShown.addListener((o, oldV, n) -> { if (n) displaySolution(); });
-        vm.goalReached  .addListener((o, oldV, n) -> { if (n) displayVictory(); });
+        /* other events */
+        vm.solutionShown.addListener((o,ov,n)-> { if (n) displaySolution(); });
+        vm.goalReached  .addListener((o,ov,n)-> { if (n) displayVictory(); });
 
-        // if we on this screen with a maze already loaded
+        /* came back to this screen with maze already loaded */
         if (vm.mazeLoaded.get()) displayMaze();
     }
 
-    @Override public void displayMaze() {
-        System.out.println("displayMaze called");
+    /* ---------- drawing ---------- */
+    @Override
+    public void displayMaze() {
         displayer.drawMaze(viewModel.getMaze(),
-                           viewModel.getCharacterRow(),
-                           viewModel.getCharacterColumn());
+                viewModel.getCharacterRow(),
+                viewModel.getCharacterColumn());
+        mazeCanvas.requestFocus();          // keep focus after redraw
     }
+    @Override public void displaySolution() { displayer.drawSolution(viewModel.getSolution()); }
+    @Override public void displayVictory()  { try { sceneManager.switchToVictory(); } catch (Exception ex) { showError(ex.getMessage()); } }
 
-    @Override public void displaySolution() {
-        displayer.drawSolution(viewModel.getSolution());
-    }
-
-    @Override public void displayVictory() {
-        try {
-            sceneManager.switchToVictory();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override public void showError(String message) {
-        new Alert(Alert.AlertType.ERROR, message).showAndWait();
-    }
-
+    /* ---------- misc ---------- */
+    @Override public void showError(String msg) { new Alert(Alert.AlertType.ERROR, msg).showAndWait(); }
 }
+
