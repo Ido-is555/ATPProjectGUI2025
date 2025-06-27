@@ -83,10 +83,12 @@ public class MyViewController implements IView {
         displayer.drawSolution(viewModel.getSolution());
     }
 
-    @Override public void displayVictory(ActionEvent event) {
+    @Override public void displayVictory() {
         try {
-            sceneManager.switchToVictory(event);
+            sceneManager.switchToVictory();
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

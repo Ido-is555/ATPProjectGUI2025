@@ -14,7 +14,7 @@ public class PropertiesController implements IView {
     @FXML private TextField txtCols;
     @FXML private Button btnPlay;
 
-    private MyViewModel viewModel;
+    private MyViewModel viewModel = SceneManager.getViewModel();
 
     @FXML private void onPlayClicked(ActionEvent event) {
         try {
@@ -35,7 +35,7 @@ public class PropertiesController implements IView {
     @Override public void bindViewModel(MyViewModel vm) { this.viewModel = vm; }
     @Override public void displayMaze()    {}
     @Override public void displaySolution(){}
-    @Override public void displayVictory(ActionEvent event) {}
+    @Override public void displayVictory() {}
     @Override public void showError(String msg){
         javafx.scene.control.Alert a=new javafx.scene.control.Alert(
                 javafx.scene.control.Alert.AlertType.ERROR,msg);

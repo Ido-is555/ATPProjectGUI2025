@@ -8,6 +8,6 @@ public interface IView {
 
     void displayMaze();
     void displaySolution();
-    void displayVictory(ActionEvent event);
+    void displayVictory();
     void showError(String message);
 }

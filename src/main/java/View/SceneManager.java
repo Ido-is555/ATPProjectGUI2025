@@ -21,7 +21,7 @@ public class SceneManager {
         viewModel = vm;
     }
 
-    //public static MyViewModel getViewModel() { return viewModel; }
+    public static MyViewModel getViewModel() { return viewModel; }
 
     public void switchToStart(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("StartScreen.fxml"));
@@ -46,11 +46,20 @@ public class SceneManager {
         stage.setScene(scene);
         stage.show();
     }
-    public void switchToVictory(ActionEvent event) throws IOException {
+//    public void switchToVictory() throws IOException {
+//        Parent root = FXMLLoader.load(getClass().getResource("Victory.fxml"));
+//        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+//        scene = new Scene(root);
+//        stage.setScene(scene);
+//        stage.show();
+//    }
+
+    // --- special overload: when we reach victory from code (אין ActionEvent) ---
+    public void switchToVictory() throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("Victory.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
+        stage.centerOnScreen();
         stage.show();
     }
 }

@@ -5,6 +5,8 @@ import Client.IClientStrategy;
 import Server.Server;
 import Server.ServerStrategyGenerateMaze;
 import Server.ServerStrategySolveSearchProblem;
+import IO.MyCompressorOutputStream;
+import IO.MyDecompressorInputStream;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
 import javafx.scene.input.KeyCode;
@@ -14,51 +16,58 @@ import java.net.InetAddress;
 
 public class MyModel implements IModel {
 
-    /* ---------- מצב משחק ---------- */
-    private Maze maze;
-    private Solution solution;
-    private int characterRow;
-    private int characterColumn;
+    /* ---------- game state ---------- */
+    private Maze      maze;
+    private Solution  solution;
+    private int       characterRow;
+    private int       characterColumn;
 
-    /* ---------- שרתים מקומיים ---------- */
+    /* ---------- local servers ---------- */
     private final Server generateServer;
     private final Server solveServer;
     private static final int LISTENING_INTERVAL_MS = 1000;
 
     public MyModel() {
-        /* קונסטרקטור Server שב-JAR:  (port, intervalMS, strategy) */
         generateServer = new Server(5400, LISTENING_INTERVAL_MS, new ServerStrategyGenerateMaze());
         solveServer    = new Server(5401, LISTENING_INTERVAL_MS, new ServerStrategySolveSearchProblem());
         generateServer.start();
         solveServer.start();
     }
 
-    /* ---------- יצירת מבוך ---------- */
+    /* ---------- generate maze ---------- */
     @Override
-    public void generateMaze(int rows, int columns) {
+    public void generateMaze(int rows, int cols) {
+
         IClientStrategy strat = (in, out) -> {
-            try (ObjectOutputStream toServer = new ObjectOutputStream(out);
-                 ObjectInputStream  fromSrv  = new ObjectInputStream(in)) {
+            try (ObjectOutputStream toSrv = new ObjectOutputStream(out);
+                 ObjectInputStream  from  = new ObjectInputStream(in)) {
 
-                toServer.writeObject(new int[]{rows, columns});
-                toServer.flush();
+                toSrv.writeObject(new int[]{rows, cols});
+                toSrv.flush();
 
-                byte[] compressed = (byte[]) fromSrv.readObject();
-                maze = new Maze(compressed);
+                /* read compressed maze from server */
+                byte[] compressed = (byte[]) from.readObject();
 
+                /* decompress */
+                int expectedSize = 12 + rows * cols;          // 12-byte header + body
+                byte[] decompressed = new byte[expectedSize];
+                new MyDecompressorInputStream(new ByteArrayInputStream(compressed))
+                        .read(decompressed);
+
+                maze = new Maze(decompressed);
                 characterRow    = maze.getStartPosition().getRowIndex();
                 characterColumn = maze.getStartPosition().getColumnIndex();
-                solution = null;
+                solution        = null;
+
             } catch (Exception e) { e.printStackTrace(); }
         };
 
-        /* קונסטרקטור Client שב-JAR:  (InetAddress, port, strategy) */
         try {
             new Client(InetAddress.getByName("localhost"), 5400, strat).communicateWithServer();
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    /* ---------- תזוזת דמות ---------- */
+    /* ---------- character movement ---------- */
     @Override
     public void moveCharacter(KeyCode key) {
         if (maze == null) return;
@@ -72,30 +81,30 @@ public class MyModel implements IModel {
 
     private void tryMove(int r, int c) {
         if (isValidMove(r, c)) {
-            characterRow = r;
+            characterRow    = r;
             characterColumn = c;
         }
     }
-
     private boolean isValidMove(int r, int c) {
         return maze != null &&
-               r >= 0 && r < maze.getRows() &&
-               c >= 0 && c < maze.getColumns() &&
-               maze.getMaze()[r][c] == 0;       // 0 = דרך, 1 = קיר
+                r >= 0 && r < maze.getRows() &&
+                c >= 0 && c < maze.getColumns() &&
+                maze.getMaze()[r][c] == 0;
     }
 
-    /* ---------- פתרון מבוך ---------- */
+    /* ---------- solve maze ---------- */
     @Override
     public void solveMaze() {
         if (maze == null) return;
 
         IClientStrategy strat = (in, out) -> {
-            try (ObjectOutputStream toServer = new ObjectOutputStream(out);
-                 ObjectInputStream  fromSrv  = new ObjectInputStream(in)) {
+            try (ObjectOutputStream toSrv = new ObjectOutputStream(out);
+                 ObjectInputStream  from  = new ObjectInputStream(in)) {
 
-                toServer.writeObject(maze);
-                toServer.flush();
-                solution = (Solution) fromSrv.readObject();
+                toSrv.writeObject(maze);
+                toSrv.flush();
+                solution = (Solution) from.readObject();
+
             } catch (Exception e) { e.printStackTrace(); }
         };
 
@@ -104,38 +113,45 @@ public class MyModel implements IModel {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    /* ---------- שמירה / טעינה ---------- */
+    /* ---------- save / load ---------- */
     @Override
     public void saveMaze(File file) throws Exception {
         if (maze == null) return;
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
-            oos.writeObject(maze.toByteArray());
+        try (MyCompressorOutputStream cos = new MyCompressorOutputStream(new FileOutputStream(file))) {
+            cos.write(maze.toByteArray());
+            cos.flush();
         }
     }
 
     @Override
     public void loadMaze(File file) throws Exception {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            byte[] data = (byte[]) ois.readObject();
+        try (MyDecompressorInputStream dis = new MyDecompressorInputStream(new FileInputStream(file))) {
+
+            /* read fully */
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            int b;
+            while ((b = dis.read()) != -1) baos.write(b);
+            byte[] data = baos.toByteArray();
+
             maze = new Maze(data);
             characterRow    = maze.getStartPosition().getRowIndex();
             characterColumn = maze.getStartPosition().getColumnIndex();
-            solution = null;
+            solution        = null;
         }
     }
 
-    /* ---------- Getters ---------- */
-    @Override public Maze      getMaze()            { return maze; }
-    @Override public Solution  getSolution()        { return solution; }
-    @Override public int       getCharacterRow()    { return characterRow; }
-    @Override public int       getCharacterColumn() { return characterColumn; }
-    @Override public boolean   isGoalReached() {
+    /* ---------- getters ---------- */
+    @Override public Maze     getMaze()             { return maze; }
+    @Override public Solution getSolution()         { return solution; }
+    @Override public int      getCharacterRow()     { return characterRow; }
+    @Override public int      getCharacterColumn()  { return characterColumn; }
+    @Override public boolean  isGoalReached() {
         return maze != null &&
-               characterRow == maze.getGoalPosition().getRowIndex() &&
-               characterColumn == maze.getGoalPosition().getColumnIndex();
+                characterRow == maze.getGoalPosition().getRowIndex() &&
+                characterColumn == maze.getGoalPosition().getColumnIndex();
     }
 
-    /* ---------- כיבוי ---------- */
+    /* ---------- shutdown ---------- */
     @Override public void shutdown() {
         generateServer.stop();
         solveServer.stop();
