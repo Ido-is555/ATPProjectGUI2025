@@ -49,6 +49,13 @@
             <Button fx:id="btnGiveUp"
                     text="Give Up"
                     onAction="#onGiveUp"/>
+
+             <!-- New-Game button: starts hidden -->
+        <Button fx:id="btnNewGame"
+                text="New Game"
+                onAction="#onNewGame"
+                visible="false"   managed="false"/>
+
         </HBox>
     </bottom>
 

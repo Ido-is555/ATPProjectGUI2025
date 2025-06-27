@@ -18,6 +18,7 @@ public class MyViewController implements IView {
     @FXML private MenuItem menuNew, menuSave, menuExit;
     @FXML private MenuItem menuHelp, menuAbout, menuProperties;
     @FXML private Button   btnGiveUp;
+    @FXML private Button   btnNewGame;
     @FXML private Canvas   mazeCanvas;
 
     /* ---------- helpers ---------- */
@@ -30,9 +31,14 @@ public class MyViewController implements IView {
     private void initialize() {
         displayer = new MazeDisplayer(mazeCanvas);
 
-        // allow keyboard focus + click-to-focus
+        // --- keep keyboard focus ---
         mazeCanvas.setFocusTraversable(true);
         mazeCanvas.setOnMouseClicked(e -> mazeCanvas.requestFocus());
+        Platform.runLater(() -> mazeCanvas.requestFocus());
+
+        // --- hide New-Game button at startup ---
+        btnNewGame.setVisible(false);
+        btnNewGame.setManaged(false);
 
         // scene-level key handler (runs after FXML is attached to a Scene)
         Platform.runLater(() -> {
@@ -97,10 +103,31 @@ public class MyViewController implements IView {
                 viewModel.getCharacterColumn());
         mazeCanvas.requestFocus();          // keep focus after redraw
     }
-    @Override public void displaySolution() { displayer.drawSolution(viewModel.getSolution()); }
-    @Override public void displayVictory()  { try { sceneManager.switchToVictory(); } catch (Exception ex) { showError(ex.getMessage()); } }
+    @Override public void displaySolution() {
+        displayer.drawSolution(viewModel.getSolution());
+
+         // --- reveal the New-Game button ---
+        btnNewGame.setManaged(true);
+        btnNewGame.setVisible(true);
+    }
+    @Override public void displayVictory()  {
+        try { sceneManager.switchToVictory(); }
+        catch (Exception ex) {
+            showError(ex.getMessage()); }
+    }
 
     /* ---------- misc ---------- */
-    @Override public void showError(String msg) { new Alert(Alert.AlertType.ERROR, msg).showAndWait(); }
+    @Override public void showError(String msg) {
+        new Alert(Alert.AlertType.ERROR, msg).showAndWait();
+    }
+
+    @FXML
+    private void onNewGame(ActionEvent e) {
+        try {
+            sceneManager.switchToProperties(e);   // --- same flow as menu “New” ---
+        } catch (Exception ex) {
+            showError(ex.getMessage());
+        }
+}
 }
 
