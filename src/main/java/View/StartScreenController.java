@@ -15,6 +15,8 @@ public class StartScreenController {
             sceneManager.switchToProperties(event);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

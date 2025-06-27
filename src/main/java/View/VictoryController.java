@@ -12,6 +12,8 @@ public class VictoryController {
             sceneManager.switchToStart(event);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

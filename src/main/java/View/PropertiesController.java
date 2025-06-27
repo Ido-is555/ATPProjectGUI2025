@@ -25,13 +25,14 @@ public class PropertiesController implements IView {
                     sceneManager.switchToGame(event);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
         } catch (NumberFormatException nfe) {
             showError("Rows/Cols must be integers");
         }
     }
 
-    /* --- IView (minimal for this screen) --- */
     @Override public void bindViewModel(MyViewModel vm) { this.viewModel = vm; }
     @Override public void displayMaze()    {}
     @Override public void displaySolution(){}

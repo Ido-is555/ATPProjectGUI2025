@@ -33,7 +33,9 @@
 
     <!-- ─────────────── center : maze canvas ─────────────── -->
     <center>
-        <Canvas fx:id="mazeCanvas" width="600.0" height="600.0"/>
+        <Canvas fx:id="mazeCanvas"
+        width="600.0" height="600.0"
+        onKeyPressed="#onKeyPressed"/>
     </center>
 
     <!-- ─────────────── bottom : “Give Up” button ─────────────── -->

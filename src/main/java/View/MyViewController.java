@@ -26,13 +26,15 @@ public class MyViewController implements IView {
     @FXML private void initialize() {
         displayer = new MazeDisplayer(mazeCanvas);
         mazeCanvas.setFocusTraversable(true);
+        javafx.application.Platform.runLater(() -> mazeCanvas.requestFocus());
+        mazeCanvas.setOnMouseClicked(e -> mazeCanvas.requestFocus());
     }
 
     /* ---------- Menu Actions ---------- */
     @FXML private void onNew(ActionEvent event) {
         try {
             sceneManager.switchToProperties(event);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -53,8 +55,10 @@ public class MyViewController implements IView {
     /* ---------- Gameplay Actions ---------- */
     @FXML private void onGiveUp() { viewModel.solveMaze(); }
 
-    @FXML private void onKeyPressed(KeyEvent e) {
-        viewModel.moveCharacter(e.getCode());
+   @FXML
+    private void onKeyPressed(KeyEvent e) {
+    viewModel.moveCharacter(e.getCode());   // מעדכן את המודל
+    displayMaze();                          // מצייר שוב מיד את המפה + שחקן
     }
 
     /* ---------- IView ---------- */
@@ -74,6 +78,7 @@ public class MyViewController implements IView {
     }
 
     @Override public void displayMaze() {
+        System.out.println("displayMaze called");
         displayer.drawMaze(viewModel.getMaze(),
                            viewModel.getCharacterRow(),
                            viewModel.getCharacterColumn());
@@ -96,4 +101,5 @@ public class MyViewController implements IView {
     @Override public void showError(String message) {
         new Alert(Alert.AlertType.ERROR, message).showAndWait();
     }
+
 }
