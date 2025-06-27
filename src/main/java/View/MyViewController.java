@@ -63,17 +63,23 @@ public class MyViewController implements IView {
 
     /* ---------- IView ---------- */
     @Override public void bindViewModel(MyViewModel vm) {
-        this.viewModel = vm;
+         this.viewModel = vm;
 
-        // disable-bindings
         menuSave.disableProperty().bind(vm.mazeLoaded.not());
         btnGiveUp.disableProperty().bind(vm.mazeLoaded.not());
 
-        vm.mazeLoaded.addListener((o,oldVal,n)-> { if(n) displayMaze(); });
-        vm.solutionShown.addListener((o,oldVal,n)-> { if(n) displaySolution(); });
-        vm.goalReached.addListener((o,oldVal,n)-> { if(n) displayVictory(); });
+        // draw when the maze is first generated / loaded
+        vm.mazeLoaded.addListener((o, oldV, n) -> { if (n) displayMaze(); });
 
-        // ציור ראשוני אם חזרנו לכאן עם מבוך כבר קיים
+        // redraw every time the character moves
+        vm.characterRow   .addListener((o, oldV, n) -> displayMaze());
+        vm.characterColumn.addListener((o, oldV, n) -> displayMaze());
+
+        // show solution / victory screens
+        vm.solutionShown.addListener((o, oldV, n) -> { if (n) displaySolution(); });
+        vm.goalReached  .addListener((o, oldV, n) -> { if (n) displayVictory(); });
+
+        // if we on this screen with a maze already loaded
         if (vm.mazeLoaded.get()) displayMaze();
     }
 
