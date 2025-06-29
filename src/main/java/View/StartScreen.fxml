@@ -2,7 +2,42 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="View.StartScreenController"
-           >
-    <Button fx:id="btnStart" text="התחל" onAction="#onStartClicked" styleClass="start-button"/>
-</StackPane>
+<!--  start-screen with three theme buttons  -->
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="View.StartScreenController"
+
+        stylesheets="@../View/style.css">
+
+        <!--  semi-transparent “glass” card  -->
+<VBox fx:id="glassPane"
+      id="glass-pane"
+        alignment="CENTER"
+        spacing="20">
+
+        <!-- heading -->
+<Label text="Welcome to the maze!"
+       styleClass="title"/>
+
+<Label text="Choose theme:"
+       styleClass="subtitle"/>
+
+        <!-- princess -->
+<Button fx:id="btnPrincess"
+        text="Princess theme"
+        onAction="#onPrincessTheme"
+        styleClass="theme-btn princess"/>
+
+        <!-- haunted house -->
+<Button fx:id="btnWitch"
+        text="Haunted-House theme"
+        onAction="#onWitchTheme"
+        styleClass="theme-btn witch"/>
+
+        <!-- nemo -->
+<Button fx:id="btnNemo"
+        text="Nemo theme"
+        onAction="#onNemoTheme"
+        styleClass="theme-btn nemo"/>
+        </VBox>
+        </StackPane>

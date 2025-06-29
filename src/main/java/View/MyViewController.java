@@ -111,7 +111,7 @@ public class MyViewController implements IView {
         btnNewGame.setVisible(true);
     }
     @Override public void displayVictory()  {
-        try { sceneManager.switchToVictory(); }
+        try { sceneManager.switchToVictory("start_screen.css"); }
         catch (Exception ex) {
             showError(ex.getMessage()); }
     }

@@ -1,22 +1,33 @@
 package View;
 
 import javafx.event.ActionEvent;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import java.io.IOException;
 
+
 public class StartScreenController {
 
-    private SceneManager sceneManager = new SceneManager();
-    @FXML private Button btnStart;
+    // --- single SceneManager instance (keeps the stage & ViewModel) ---
+    private final SceneManager sceneManager = new SceneManager();
 
-    @FXML private void onStartClicked(ActionEvent event) {
-        try {
-            sceneManager.switchToProperties(event);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    // --- princess theme selected ---
+    public void onPrincessTheme(ActionEvent event) throws Exception {
+        SceneManager.setStyle("Princess.css");   // --- save chosen theme ---
+        sceneManager.switchToProperties(event);                 // --- open size-picker ---
+    }
+
+    // --- haunted-house theme selected ---
+    public void onWitchTheme(ActionEvent event) throws Exception {
+        SceneManager.setStyle("HauntedHouse.css");
+        sceneManager.switchToProperties(event);
+    }
+
+    // --- nemo theme selected ---
+    public void onNemoTheme(ActionEvent event) throws Exception {
+        SceneManager.setStyle("Nemo.css");
+        sceneManager.switchToProperties(event);
     }
 }
+

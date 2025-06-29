@@ -15,15 +15,20 @@ public class SceneManager {
     private Scene scene;
     private Parent root;
     private static MyViewModel viewModel;
+    private static String styleChose;
 
     public static void init(Stage primary, MyViewModel vm) {
         stage = primary;
         viewModel = vm;
     }
 
+    public static void setStyle(String style){
+        styleChose = style;
+    }
+
     public static MyViewModel getViewModel() { return viewModel; }
 
-    private void go(ActionEvent e, String fxml) throws Exception {
+    private void go(ActionEvent e, String fxml, String style) throws Exception {
     FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
     Parent root       = loader.load();
 
@@ -33,14 +38,16 @@ public class SceneManager {
 
     stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
     stage.setScene(new Scene(root));
+    scene = stage.getScene();
+    scene.getStylesheets().add(getClass().getResource(style).toExternalForm());
     stage.centerOnScreen();
     stage.show();
 }
 
 /* כניסות ציבוריות */
-public void switchToStart(ActionEvent e)      throws Exception { go(e,"StartScreen.fxml"); }
-public void switchToProperties(ActionEvent e) throws Exception { go(e,"Properties.fxml");  }
-public void switchToGame(ActionEvent e)       throws Exception { go(e,"Game.fxml");        }
+public void switchToStart(ActionEvent e)      throws Exception { go(e,"StartScreen.fxml", "style.css"); }
+public void switchToProperties(ActionEvent e) throws Exception { go(e,"Properties.fxml", styleChose);  }
+public void switchToGame(ActionEvent e)       throws Exception { go(e,"Game.fxml", styleChose);        }
 
 
 //    public void switchToStart(ActionEvent event) throws IOException {
@@ -75,10 +82,11 @@ public void switchToGame(ActionEvent e)       throws Exception { go(e,"Game.fxml
 //    }
 //
     // --- special overload: when we reach victory from code (אין ActionEvent) ---
-    public void switchToVictory() throws Exception {
+    public void switchToVictory(String style) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("Victory.fxml"));
         scene = new Scene(root);
         stage.setScene(scene);
+        scene.getStylesheets().add(getClass().getResource(style).toExternalForm());
         stage.centerOnScreen();
         stage.show();
     }
