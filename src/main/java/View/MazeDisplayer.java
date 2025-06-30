@@ -134,12 +134,15 @@ public class MazeDisplayer {
         String css = (scene != null && !scene.getStylesheets().isEmpty())
                 ? scene.getStylesheets().get(0).toLowerCase() : "";
 
-        if (css.contains("witch")) {
-            playerImg = load("witch.png");  goalImg = load("door.jpg");
+        if (css.contains("hauntedhouse")) {
+            playerImg = load("witch.jpg");  goalImg = load("door.jpg");
         } else if (css.contains("princess")) {
             playerImg = load("princess.jpg");  goalImg = load("crown.jpg");
-        } else {                              /* nemo / default */
+        } else if (css.contains("nemo")){
             playerImg = load("dory.jpg");  goalImg = load("nemo.jpg");
+        }
+        else{
+            playerImg= load("start_background.jpg"); goalImg = load("start_background.jpg");
         }
     }
 

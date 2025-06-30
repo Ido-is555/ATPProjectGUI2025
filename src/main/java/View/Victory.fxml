@@ -2,11 +2,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="View.VictoryController"
->
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="View.VictoryController">
 
-    <VBox alignment="CENTER" spacing="20">
-        <Label text=" ניצחת!" styleClass="victory-label"/>
-        <Button text="משחק חדש" onAction="#onNewGame"/>
-    </VBox>
-</StackPane>
+    <!-- top menu -->
+    <top>
+        <fx:include source="CommonMenu.fxml"/>
+    </top>
+
+    <!-- victory message + new‐game button -->
+    <center>
+        <VBox alignment="CENTER" spacing="20">
+            <Label text="YOU WON!" styleClass="victory-label"/>
+            <Button text="Ready For Another Round?" onAction="#onNewGame"/>
+        </VBox>
+    </center>
+
+</BorderPane>

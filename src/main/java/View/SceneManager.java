@@ -16,12 +16,17 @@ public class SceneManager {
     private Parent root;
     private static MyViewModel viewModel;
     private static String styleChose;
+    /* --- current theme --- */
+    private static Theme currentTheme;
 
     public static void init(Stage primary, MyViewModel vm) {
         stage = primary;
         viewModel = vm;
     }
-
+    public static void applyTheme(Theme t){
+        currentTheme = t;
+        AudioManager.get().playBackground(t.bg());   // << play proper loop
+    }
     public static void setStyle(String style){
         styleChose = style;
     }
@@ -44,43 +49,14 @@ public class SceneManager {
     stage.show();
 }
 
+public Theme getCurrentTheme(){ return currentTheme; }
+
 /* כניסות ציבוריות */
-public void switchToStart(ActionEvent e)      throws Exception { go(e,"StartScreen.fxml", "style.css"); }
+public void switchToStart(ActionEvent e)      throws Exception { AudioManager.get().stopBackground(); go(e,"StartScreen.fxml", "style.css"); }
 public void switchToProperties(ActionEvent e) throws Exception { go(e,"Properties.fxml", styleChose);  }
 public void switchToGame(ActionEvent e)       throws Exception { go(e,"Game.fxml", styleChose);        }
 
 
-//    public void switchToStart(ActionEvent event) throws IOException {
-//        Parent root = FXMLLoader.load(getClass().getResource("StartScreen.fxml"));
-//        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-//        scene = new Scene(root);
-//        stage.setScene(scene);
-//        stage.show();
-//    }
-//
-//    public void switchToProperties(ActionEvent event) throws IOException {
-//        Parent root = FXMLLoader.load(getClass().getResource("Properties.fxml"));
-//        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-//        scene = new Scene(root);
-//        stage.setScene(scene);
-//        stage.show();
-//    }
-//
-//    public void switchToGame(ActionEvent event) throws IOException {
-//        Parent root = FXMLLoader.load(getClass().getResource("Game.fxml"));
-//        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-//        scene = new Scene(root);
-//        stage.setScene(scene);
-//        stage.show();
-//    }
-//    public void switchToVictory() throws IOException {
-//        Parent root = FXMLLoader.load(getClass().getResource("Victory.fxml"));
-//        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-//        scene = new Scene(root);
-//        stage.setScene(scene);
-//        stage.show();
-//    }
-//
     // --- special overload: when we reach victory from code (אין ActionEvent) ---
     public void switchToVictory(String style) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("Victory.fxml"));
@@ -89,5 +65,13 @@ public void switchToGame(ActionEvent e)       throws Exception { go(e,"Game.fxml
         scene.getStylesheets().add(getClass().getResource(style).toExternalForm());
         stage.centerOnScreen();
         stage.show();
+    }
+
+    public static void setStage(Stage stage) {
+        stage = stage;
+        stage.setWidth(1200);
+        stage.setHeight(800);
+        stage.setMinWidth(800);   // אפשרי: גבול תחתון
+        stage.setMinHeight(600);
     }
 }

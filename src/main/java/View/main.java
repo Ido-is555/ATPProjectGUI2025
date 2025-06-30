@@ -16,6 +16,7 @@ public class main extends Application {
         MyModel model = new MyModel();
         MyViewModel viewModel = new MyViewModel(model);
         SceneManager.init(stage, viewModel);
+        SceneManager.setStage(stage);
 
         try{
             Parent root = FXMLLoader.load(getClass().getResource("StartScreen.fxml"));

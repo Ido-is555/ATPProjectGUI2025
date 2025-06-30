@@ -2,42 +2,39 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<!--  start-screen with three theme buttons  -->
-<StackPane xmlns="http://javafx.com/javafx"
-           xmlns:fx="http://javafx.com/fxml"
-           fx:controller="View.StartScreenController"
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="View.StartScreenController"
+            stylesheets="@style.css">
 
-        stylesheets="@../View/style.css">
+        <!-- menu always up here -->
+        <top>
+                <fx:include source="CommonMenu.fxml"/>
+        </top>
 
-        <!--  semi-transparent “glass” card  -->
-<VBox fx:id="glassPane"
-      id="glass-pane"
-        alignment="CENTER"
-        spacing="20">
+        <!-- your “glass” card in the center -->
+        <center>
+                <VBox fx:id="glassPane"
+                      id="glass-pane"
+                      alignment="CENTER"
+                      spacing="20">
+                        <Label text="Welcome to the maze!" styleClass="label title"/>
+                        <Label text="Choose theme:"       styleClass="label subtitle"/>
+                        <Button fx:id="btnPrincess"
+                                text="Princess theme"
+                                onAction="#onPrincessTheme"
+                                styleClass="princess"/>
 
-        <!-- heading -->
-<Label text="Welcome to the maze!"
-       styleClass="title"/>
+                        <Button fx:id="btnWitch"
+                                text="Haunted-House theme"
+                                onAction="#onWitchTheme"
+                                styleClass="witch"/>
 
-<Label text="Choose theme:"
-       styleClass="subtitle"/>
+                        <Button fx:id="btnNemo"
+                                text="Nemo theme"
+                                onAction="#onNemoTheme"
+                                styleClass="nemo"/>
+                </VBox>
+        </center>
 
-        <!-- princess -->
-<Button fx:id="btnPrincess"
-        text="Princess theme"
-        onAction="#onPrincessTheme"
-        styleClass="theme-btn princess"/>
-
-        <!-- haunted house -->
-<Button fx:id="btnWitch"
-        text="Haunted-House theme"
-        onAction="#onWitchTheme"
-        styleClass="theme-btn witch"/>
-
-        <!-- nemo -->
-<Button fx:id="btnNemo"
-        text="Nemo theme"
-        onAction="#onNemoTheme"
-        styleClass="theme-btn nemo"/>
-        </VBox>
-        </StackPane>
+</BorderPane>

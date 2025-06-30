@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            stylesheets="@style.css">
+    <center>
+        <VBox>
+            <Label text="About Us:" styleClass="about-title"/>
+            <Separator/>
+
+            <Label text="Dekel Boneh and Ido Israeli" styleClass="about-heading"/>
+            <Label text="IDs: 318826872, 214672255" />
+            <Label text="Students at Ben-Gurion University" />
+            <Label text="Experts in games and apps for kids and for adults who feel like kids :)." wrapText="true"/>
+        </VBox>
+    </center>
+</BorderPane>

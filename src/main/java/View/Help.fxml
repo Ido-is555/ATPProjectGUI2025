@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            stylesheets="@style.css">
+    <!-- center the help content -->
+    <center>
+        <VBox>
+            <Label text="Game Rules:" styleClass="about-title"/>
+
+            <Label text="• Navigate your character through the maze to reach the goal cell." wrapText="true"/>
+            <Label text="• Use the arrow keys to move up, down, left, or right. No diagonal moves allowed." wrapText="true"/>
+            <Label text="• If you get stuck, click “Show Solution“ to reveal the green solution path." wrapText="true"/>
+            <Label text="• After the solution was shown, you can start a new game." wrapText="true"/>
+
+            <Separator/>
+            <Label text=" " styleClass="about-title"/>
+
+            <Label text="Game Themes:" styleClass="about-title"/>
+
+            <Label text="• Princess Theme" wrapText="true"/>
+            <Label text="    The princess should reach her crown." wrapText="true"/>
+
+            <Label text="• Haunted House Theme" wrapText="true"/>
+            <Label text="    Navigate spooky corridors to escape the haunted house by reaching the door." wrapText="true"/>
+            <Label text="• Nemo Theme" wrapText="true"/>
+            <Label text="    Navigate underwater to help Dory find Nemo." wrapText="true"/>
+
+            <Separator/>
+            <Label text=" " styleClass="about-title"/>
+
+            <Label text="FOR CUSTOMER SUPPORT:" wrapText="true"/>
+            <Label text="idois@post.bgu.ac.il" wrapText="true"/>
+            <Label text="dekelbo@post.bgu.ac.il" wrapText="true"/>
+        </VBox>
+    </center>
+
+</BorderPane>

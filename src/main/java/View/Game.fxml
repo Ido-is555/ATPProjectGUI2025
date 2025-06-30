@@ -11,24 +11,7 @@
 
     <!-- ─────────────── top : menu bar ─────────────── -->
     <top>
-        <MenuBar>
-            <Menu text="File">
-                <MenuItem fx:id="menuNew"   text="New"   onAction="#onNew"/>
-                <MenuItem fx:id="menuSave"  text="Save"  onAction="#onSave"/>
-                <SeparatorMenuItem/>
-                <MenuItem fx:id="menuExit"  text="Exit"  onAction="#onExit"/>
-            </Menu>
-
-            <Menu text="Options">
-                <!-- “Properties” פותח שוב את מסך ההגדרות -->
-                <MenuItem fx:id="menuProperties" text="Properties" onAction="#onNew"/>
-            </Menu>
-
-            <Menu text="Help">
-                <MenuItem fx:id="menuHelp"  text="Help"/>
-                <MenuItem fx:id="menuAbout" text="About"/>
-            </Menu>
-        </MenuBar>
+        <fx:include source="CommonMenu.fxml"/>
     </top>
 
     <!-- ─────────────── center : maze canvas ─────────────── -->
@@ -47,7 +30,7 @@
             </padding>
 
             <Button fx:id="btnGiveUp"
-                    text="Give Up"
+                    text="Show Solution"
                     onAction="#onGiveUp"/>
 
              <!-- New-Game button: starts hidden -->

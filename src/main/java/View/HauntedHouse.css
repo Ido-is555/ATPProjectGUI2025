@@ -1,8 +1,15 @@
-/* --- haunted-house backdrop --- */
+@import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+
 .root {
-    -fx-background-image: url("../images/huntedHouseScene.jpg");
+    -fx-background-image: url("../images/hauntedHauseScene.jpg");
     -fx-background-size: cover;
-    -fx-font-family: "Arial";
+    -fx-font-family: "Creepster", cursive;
+}
+.label {
+    -fx-font-size: 24px;       /* גודל טקסט גדול יותר */
+    -fx-font-weight: bold;     /* טקסט מודגש */
+    -fx-text-fill: #ffffff;    /* צבע לבן - אפשר לשנות לפי הרקע */
+    -fx-effect: dropshadow(gaussian, black, 2, 0, 0, 0); /* צל שחור עדין */
 }
 
 /* --- spooky menu --- */
@@ -16,6 +23,12 @@
     -fx-font-weight: bold;
     -fx-background-radius: 10;
     -fx-effect: dropshadow(gaussian , rgba(0,0,0,0.8) , 6 , 0 , 0 , 3);
+
+     /* הגדלה: */
+        -fx-pref-width: 260px;
+        -fx-pref-height: 70px;
+
+        -fx-font-size: 20px; /* גם הטקסט ייראה טוב יותר */
 }
 .button:hover { -fx-rotate: -5; }
 

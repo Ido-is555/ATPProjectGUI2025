@@ -49,18 +49,13 @@ public class MyViewController implements IView {
         });
     }
 
-    /* ---------- menu actions ---------- */
-    @FXML private void onNew(ActionEvent e) { try { sceneManager.switchToProperties(e); } catch (Exception ex) { showError(ex.getMessage()); } }
-    @FXML private void onSave() {
-        FileChooser fc = new FileChooser();
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Maze (*.maze)", "*.maze"));
-        File f = fc.showSaveDialog(menuSave.getParentPopup().getScene().getWindow());
-        if (f != null) try { viewModel.saveMaze(f); } catch (Exception ex) { showError(ex.getMessage()); }
-    }
-    @FXML private void onExit() { viewModel.shutdown(); System.exit(0); }
-
     /* ---------- gameplay actions ---------- */
-    @FXML private void onGiveUp() { viewModel.solveMaze(); }
+    @FXML private void onGiveUp() {
+        viewModel.solveMaze();
+        AudioManager.get().stopBackground();
+        AudioManager.get().playBackground(
+                sceneManager.getCurrentTheme().sfxGiveUp());
+    }
 
     /** unified key handler (scene-wide) */
     @FXML
@@ -77,7 +72,6 @@ public class MyViewController implements IView {
         this.viewModel = vm;
 
         /* disable buttons when no maze */
-        menuSave.disableProperty().bind(vm.mazeLoaded.not());
         btnGiveUp.disableProperty().bind(vm.mazeLoaded.not());
 
         /* draw when maze loads */
@@ -111,9 +105,13 @@ public class MyViewController implements IView {
         btnNewGame.setVisible(true);
     }
     @Override public void displayVictory()  {
-        try { sceneManager.switchToVictory("start_screen.css"); }
-        catch (Exception ex) {
-            showError(ex.getMessage()); }
+        try {
+            AudioManager.get().stopBackground();          // fade loop
+            AudioManager.get().playWin();                 // play win jingle
+            sceneManager.switchToVictory("style.css");
+        } catch (Exception e){
+            showError(e.getMessage());
+        }
     }
 
     /* ---------- misc ---------- */
@@ -124,7 +122,8 @@ public class MyViewController implements IView {
     @FXML
     private void onNewGame(ActionEvent e) {
         try {
-            sceneManager.switchToProperties(e);   // --- same flow as menu “New” ---
+            AudioManager.get().stopBackground();
+            sceneManager.switchToStart(e);   // --- same flow as menu “New” ---
         } catch (Exception ex) {
             showError(ex.getMessage());
         }
