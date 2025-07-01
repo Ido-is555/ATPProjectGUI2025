@@ -4,22 +4,18 @@
          xmlns:fx="http://javafx.com/fxml"
          fx:controller="View.CommonMenuController">
 
-    <!-- FILE -->
     <Menu text="File">
         <MenuItem fx:id="menuSave" text="Save" onAction="#onSave"/>
     </Menu>
 
-    <!-- OPTIONS -->
     <Menu text="Options">
         <MenuItem fx:id="menuProperties"  text="Properties"  onAction="#onProperties"/>
     </Menu>
 
-    <!-- EXIT -->
     <Menu text="Exit">
         <MenuItem fx:id="menuExit" text="Exit" onAction="#onExit"/>
     </Menu>
 
-    <!-- HELP / ABOUT -->
     <Menu text="Help">
         <MenuItem fx:id="menuHelp" text="Help" onAction="#onHelp"/>
     </Menu>

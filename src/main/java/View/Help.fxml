@@ -4,7 +4,6 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             stylesheets="@style.css">
-    <!-- center the help content -->
     <center>
         <VBox>
             <Label text="Game Rules:" styleClass="about-title"/>

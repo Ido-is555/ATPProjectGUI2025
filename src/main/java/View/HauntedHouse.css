@@ -6,17 +6,17 @@
     -fx-font-family: "Creepster", cursive;
 }
 .label {
-    -fx-font-size: 24px;       /* גודל טקסט גדול יותר */
-    -fx-font-weight: bold;     /* טקסט מודגש */
-    -fx-text-fill: #ffffff;    /* צבע לבן - אפשר לשנות לפי הרקע */
-    -fx-effect: dropshadow(gaussian, black, 2, 0, 0, 0); /* צל שחור עדין */
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-effect: dropshadow(gaussian, black, 2, 0, 0, 0);
 }
 
-/* --- spooky menu --- */
+
 .menu-bar         { -fx-background-color: rgba(20,20,20,0.85); }
 .menu, .menu-item { -fx-text-fill: #ffe600; }
 
-/* --- buttons in purple haze --- */
+
 .button {
     -fx-background-color: linear-gradient(#4e085f, #2a0433);
     -fx-text-fill: #ffe600;
@@ -24,15 +24,14 @@
     -fx-background-radius: 10;
     -fx-effect: dropshadow(gaussian , rgba(0,0,0,0.8) , 6 , 0 , 0 , 3);
 
-     /* הגדלה: */
+
         -fx-pref-width: 260px;
         -fx-pref-height: 70px;
 
-        -fx-font-size: 20px; /* גם הטקסט ייראה טוב יותר */
+        -fx-font-size: 20px;
 }
 .button:hover { -fx-rotate: -5; }
 
-/* --- thin glow frame for the maze --- */
 #mazeCanvas {
     -fx-border-color: #ffe600;
     -fx-border-width: 2;

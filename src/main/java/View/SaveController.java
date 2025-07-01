@@ -1,4 +1,5 @@
 package View;
+
 import ViewModel.MyViewModel;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -53,7 +54,7 @@ public class SaveController {
         }
     }
 
-    // static helper for opening the Save window from menu or anywhere else
+    // --- static function to open the Save window from menu or anywhere else ---
     public static void openSaveWindow(MyViewModel viewModel) {
         try {
             FXMLLoader loader = new FXMLLoader(SaveController.class.getResource("/View/Save.fxml"));
@@ -73,5 +74,4 @@ public class SaveController {
             new Alert(Alert.AlertType.ERROR, "Could not open Save window.").showAndWait();
         }
     }
-
 }

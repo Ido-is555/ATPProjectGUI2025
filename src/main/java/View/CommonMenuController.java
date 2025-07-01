@@ -1,6 +1,5 @@
 package View;
 
-import ViewModel.MyViewModel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,10 +11,7 @@ import javafx.scene.control.MenuItem;
 import java.io.IOException;
 
 public class CommonMenuController {
-    @FXML private MenuItem menuSave;
-    @FXML private MenuItem menuProperties;
-    @FXML private MenuItem menuExit, menuHelp, menuAbout;
-
+    @FXML private MenuItem menuExit;
 
     @FXML private void onSave() {
         try {
@@ -46,11 +42,12 @@ public class CommonMenuController {
         }
     }
 
+    // --- clean shutdown ---
     @FXML private void onExit() {
-        // clean shutdown & close window
         Stage s = (Stage) menuExit.getParentPopup().getOwnerWindow();
         s.close();
     }
+
     @FXML private void onHelp()    {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Help.fxml"));
@@ -64,7 +61,9 @@ public class CommonMenuController {
             dialog.showAndWait();
     } catch (IOException e) {
         e.printStackTrace();
-    } }
+        }
+    }
+
     @FXML private void onAbout() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("About.fxml"));

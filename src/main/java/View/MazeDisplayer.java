@@ -12,55 +12,33 @@ import javafx.scene.paint.Color;
 import java.util.HashSet;
 import java.util.Set;
 
-/* --------------------------------------------------------------------- */
-/* ---  MazeDisplayer  --- */
-/* --------------------------------------------------------------------- */
 public class MazeDisplayer {
-
-    /* --- canvas injected from MyView.fxml --- */
     private final Canvas canvas;
-
-    /* --- geometry (updated each draw) --- */
     private int rows, cols;
     private double cellW, cellH;
-
-    /* --- theme-dependent sprites --- */
     private Image playerImg, goalImg;
-
-    /* --- visited cells for footprints --- */
     private Set<Integer> visited = new HashSet<>();
 
     public MazeDisplayer(Canvas canvas) { this.canvas = canvas; }
 
-    /* ────────────────────────────────────────────────────────────────
-       --- main draw: floor (α 0.5), walls, footprints, sprites     ---
-       ──────────────────────────────────────────────────────────────── */
     public void drawMaze(Maze maze, int playerRow, int playerCol) {
         if (maze == null) return;
-
-        /* --- update theme sprites --- */
+        // --- updating the theme ---
         syncTheme(canvas.getScene());
 
         rows  = maze.getRows();
         cols  = maze.getColumns();
         cellH = canvas.getHeight() / rows;
         cellW = canvas.getWidth()  / cols;
-
-        /* --- remember current cell for footprints --- */
         visited.add(playerRow * cols + playerCol);
-
         GraphicsContext gc = canvas.getGraphicsContext2D();
-
-        /* --- clear previous frame --- */
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        /* --- semi-transparent white floor (shows background) --- */
         gc.setGlobalAlpha(0.5);
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setGlobalAlpha(1.0);
 
-        /* --- draw black walls --- */
         gc.setFill(Color.BLACK);
         int[][] grid = maze.getMaze();
         for (int r = 0; r < rows; r++)
@@ -68,30 +46,25 @@ public class MazeDisplayer {
                 if (grid[r][c] == 1)
                     drawCell(gc, r, c);
 
-        /* --- footprints (light-gray tint, drawn once per visited cell) --- */
         gc.setFill(Color.rgb(200, 200, 200, 0.35));
         for (int code : visited) {
             int r = code / cols, c = code % cols;
             drawCell(gc, r, c);
         }
 
-        /* --- goal sprite (exit) --- */
         Position g = maze.getGoalPosition();
         gc.drawImage(goalImg,
                 g.getColumnIndex() * cellW,
                 g.getRowIndex()    * cellH,
                 cellW, cellH);
 
-        /* --- player sprite --- */
         gc.drawImage(playerImg,
                 playerCol * cellW,
                 playerRow * cellH,
                 cellW, cellH);
     }
 
-    /* ────────────────────────────────────────────────────────────────
-       --- green solution path (diagonals split into L-shapes)      ---
-       ──────────────────────────────────────────────────────────────── */
+    // --- showing a green line for solution path ---
     public void drawSolution(Solution sol) {
         if (sol == null || sol.getSolutionPath().isEmpty()) return;
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -109,18 +82,15 @@ public class MazeDisplayer {
         }
     }
 
-    /* --- convert AState state-string to {row,col} --- */
     private int[] rc(AState s) {
         String[] parts = s.getState().replaceAll("[^0-9,]", "").split(",");
         return new int[]{ Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) };
     }
 
-    /* --- draw a single cell rectangle --- */
     private void drawCell(GraphicsContext gc, int r, int c) {
         gc.fillRect(c * cellW, r * cellH, cellW, cellH);
     }
 
-    /* --- theme switcher: picks sprites by first stylesheet name --- */
     private void syncTheme(Scene scene) {
         String css = (scene != null && !scene.getStylesheets().isEmpty())
                 ? scene.getStylesheets().get(0).toLowerCase() : "";
@@ -137,7 +107,6 @@ public class MazeDisplayer {
         }
     }
 
-    /* --- utility: load from /images/ --- */
     private Image load(String file) {
         return new Image(getClass().getResource("/images/" + file).toExternalForm());
     }

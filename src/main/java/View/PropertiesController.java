@@ -12,7 +12,6 @@ public class PropertiesController implements IView {
 
     @FXML private TextField txtRows;
     @FXML private TextField txtCols;
-    @FXML private Button btnPlay;
 
     private MyViewModel viewModel = SceneManager.getViewModel();
 

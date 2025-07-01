@@ -8,7 +8,6 @@ import Server.ServerStrategySolveSearchProblem;
 import IO.MyCompressorOutputStream;
 import IO.MyDecompressorInputStream;
 import algorithms.mazeGenerators.Maze;
-import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
 import algorithms.search.BreadthFirstSearch;
 import algorithms.search.SearchableMaze;
@@ -17,28 +16,20 @@ import javafx.scene.input.KeyCode;
 import java.io.*;
 import java.net.InetAddress;
 
-/* ------------------------------------------------------------------------- */
-/* ---  MyModel – generates only solvable mazes (no diagonal moves allowed) --- */
-/* ------------------------------------------------------------------------- */
+// --- generating only solvable mazes (without diagonal moves) ---
 public class MyModel implements IModel {
 
-    /* ---------- game state ---------- */
-    // --- the current maze ---
-    private Maze      maze;
-    // --- a cached solution (null until user asks “Give-Up”) ---
-    private Solution  solution;
+    private Maze maze;  // ---> the current maze
+    private Solution solution;    // ---> solution (null until user clicks on "solve maze")
     // --- current player coordinates ---
-    private int       characterRow;
-    private int       characterColumn;
-
-    /* ---------- local servers ---------- */
-    // --- generates mazes on port 5400 ---
-    private final Server generateServer;
-    // --- solves mazes on port 5401 ---
-    private final Server solveServer;
+    private int characterRow;
+    private int characterColumn;
+    // --- servers ---
+    private final Server generateServer;    // ---> generates mazes on port 5400
+    private final Server solveServer;   // ---> solves mazes on port 5401
     private static final int LISTENING_INTERVAL_MS = 1000;
 
-    /* ---------- ctor ---------- */
+    // --- constructor ---
     public MyModel() {
         // --- start the two local servers defined in the JAR ---
         generateServer = new Server(5400, LISTENING_INTERVAL_MS, new ServerStrategyGenerateMaze());
@@ -47,34 +38,28 @@ public class MyModel implements IModel {
         solveServer.start();
     }
 
-    /* --------------------------------------------------------------------- */
-    /* ---  generate a *solvable* maze (retry until BFS finds a path)     --- */
-    /* --------------------------------------------------------------------- */
+    // --- generating a solvable maze (retry until BFS finds a path) ---
     @Override
     public void generateMaze(int rows, int cols) {
+        while (true) {  // ---> repeat until a valid maze with a path is created
+            Maze candidate = remoteGenerate(rows, cols);    // ---> asking the server for a new maze
 
-        // --- repeat until a valid maze with a path is obtained ---
-        while (true) {
 
-            // --- 1. ask the server for a new maze ---
-            Maze candidate = remoteGenerate(rows, cols);
-
-            // --- 2. run BFS locally (4-direction) ---
+            // --- running BFS locally ---
             Solution testSol = solveLocally(candidate);
 
-            // --- 3. if BFS found a path – accept this maze ---
+            // --- if BFS found a path, accept this maze ---
             if (testSol != null && !testSol.getSolutionPath().isEmpty()) {
                 maze           = candidate;
-                solution       = null;                // --- reset cached solution ---
+                solution       = null;                // ---> reset solution
                 characterRow   = maze.getStartPosition().getRowIndex();
                 characterColumn= maze.getStartPosition().getColumnIndex();
-                break;                                // --- exit the while(true) loop ---
+                break;                                // ---> exit the loop
             }
-            // --- otherwise loop again and ask for another maze ---
         }
     }
 
-    /* ---------- helper: get maze bytes from server and decompress ---------- */
+    // --- getting as maze bytes from server and decompress ---
     private Maze remoteGenerate(int rows, int cols) {
         final Maze[] result = new Maze[1];
 
@@ -82,7 +67,7 @@ public class MyModel implements IModel {
             try (ObjectOutputStream toSrv = new ObjectOutputStream(out);
                  ObjectInputStream  from  = new ObjectInputStream(in)) {
 
-                // --- send dimensions ---
+                // --- send size ---
                 toSrv.writeObject(new int[]{rows, cols});
                 toSrv.flush();
 
@@ -107,7 +92,7 @@ public class MyModel implements IModel {
         return result[0];
     }
 
-    /* ---------- helper: BFS on the maze (no diagonals) ---------- */
+    // --- running BFS on the maze ---
     private Solution solveLocally(Maze m) {
         if (m == null) return null;
         SearchableMaze searchable = new SearchableMaze(m);
@@ -115,9 +100,7 @@ public class MyModel implements IModel {
         return bfs.solve(searchable);
     }
 
-    /* --------------------------------------------------------------------- */
-    /* ---  character movement (4 directions)                            --- */
-    /* --------------------------------------------------------------------- */
+    // ---  player's movement ---
     @Override
     public void moveCharacter(KeyCode key) {
         if (maze == null) return;
@@ -144,9 +127,7 @@ public class MyModel implements IModel {
                 maze.getMaze()[r][c] == 0;
     }
 
-    /* --------------------------------------------------------------------- */
-    /* ---  solve maze on remote server (for “Give-Up” button)           --- */
-    /* --------------------------------------------------------------------- */
+    // ---  solve maze on server (for "show solution" button) ---
     @Override
     public void solveMaze() {
         if (maze == null) return;
@@ -167,9 +148,7 @@ public class MyModel implements IModel {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    /* --------------------------------------------------------------------- */
-    /* ---  save / load maze to file (compressed format)                 --- */
-    /* --------------------------------------------------------------------- */
+    // ---  saving maze to file (compressed format) ---
     @Override
     public void saveMaze(File file) throws Exception {
         if (maze == null) return;
@@ -179,23 +158,7 @@ public class MyModel implements IModel {
         }
     }
 
-    @Override
-    public void loadMaze(File file) throws Exception {
-        try (MyDecompressorInputStream dis = new MyDecompressorInputStream(new FileInputStream(file))) {
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            int b;
-            while ((b = dis.read()) != -1) baos.write(b);
-            byte[] data = baos.toByteArray();
-
-            maze = new Maze(data);
-            characterRow    = maze.getStartPosition().getRowIndex();
-            characterColumn = maze.getStartPosition().getColumnIndex();
-            solution        = null;
-        }
-    }
-
-    /* ---------- getters ---------- */
+    // --- getters ---
     @Override public Maze     getMaze()            { return maze; }
     @Override public Solution getSolution()        { return solution; }
     @Override public int      getCharacterRow()    { return characterRow; }
@@ -206,7 +169,7 @@ public class MyModel implements IModel {
                 characterColumn == maze.getGoalPosition().getColumnIndex();
     }
 
-    /* ---------- shutdown ---------- */
+    // --- shutdown ---
     @Override
     public void shutdown() {
         generateServer.stop();
