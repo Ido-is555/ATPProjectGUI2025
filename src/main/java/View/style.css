@@ -1,6 +1,5 @@
-/*  ────────────────────────────────────────────────────────────
-    global font + background
-    ──────────────────────────────────────────────────────────── */
+/* general style css - no theme */
+
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 .label {
     -fx-font-size: 24px;
@@ -9,9 +8,6 @@
     -fx-text-fill: #4a4a4a;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 2, 0, 0, 0);
 }
-
-
-
 .label.title {
     -fx-font-size: 80px;
 }
@@ -26,23 +22,16 @@
     -fx-font-family: "Poppins", "Segoe UI", sans-serif;
 }
 
-/*  ────────────────────────────────────────────────────────────
-    glass pane (white-50%) for readability
-    ──────────────────────────────────────────────────────────── */
 #glass-pane {
-    -fx-background-color: rgba(255,255,255,0.55);  /* 45 % transparent */
+    -fx-background-color: rgba(255,255,255,0.55);
     -fx-background-radius: 24;
     -fx-padding: 40;
     -fx-spacing: 26;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.28), 30, 0, 0, 12);
 }
 
-
-/*  ────────────────────────────────────────────────────────────
-    base theme-button  (large pastel pill)
-    ──────────────────────────────────────────────────────────── */
 .button {
-    -fx-min-width: 260;          /* wide pills */
+    -fx-min-width: 260;
     -fx-min-height: 62;
     -fx-font-size: 20px;
     -fx-font-weight: 600;
@@ -54,29 +43,26 @@
     -fx-text-fill: #ffffff;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 4);
 
-    /* smooth transition */
-    -fx-scale-x: 1;           /* base scale for hover anim. */
+    -fx-scale-x: 1;
     -fx-scale-y: 1;
     -fx-transition: all 0.18s ease-in-out;
 }
 
-/*  hover  (lighter + bigger) */
+/*  hover style */
 .button:hover {
     -fx-background-color: linear-gradient(#e5f8ff, #b5e7ff);
     -fx-scale-x: 1.08;
     -fx-scale-y: 1.08;
 }
 
-/*  pressed  (darker + slight sink) */
+/*  pressing style */
 .button:pressed {
     -fx-background-color: linear-gradient(#8ad6ff, #54c0ff);
     -fx-scale-x: 0.95;
     -fx-scale-y: 0.95;
 }
 
-/*  ────────────────────────────────────────────────────────────
-    colour variants
-    ──────────────────────────────────────────────────────────── */
+/* style for each theme */
 .button.princess {
     -fx-background-color: linear-gradient(#ffd9ec, #ffa8d0);
 }
@@ -85,24 +71,21 @@
 
 .button.witch {
     -fx-background-color: linear-gradient(#7e57c2, #512da8);
-    -fx-text-fill: #ffd600; /* צהוב כהה */
+    -fx-text-fill: #ffd600;
 }
 .button.witch:hover {
-    -fx-background-color: linear-gradient(#9575cd, #673ab7); /* טיפה בהיר */
+    -fx-background-color: linear-gradient(#9575cd, #673ab7);
 }
 .button.witch:pressed {
-    -fx-background-color: linear-gradient(#512da8, #311b92); /* כהה במיוחד */
+    -fx-background-color: linear-gradient(#512da8, #311b92);
 }
 .button.nemo {
     -fx-background-color: linear-gradient(#c2fbff, #87edff);
-    -fx-text-fill: #0d47a1; /* כחול כהה */
+    -fx-text-fill: #0d47a1;
 }
 .button.nemo:hover      { -fx-background-color: linear-gradient(#e1feff, #b0f5ff); }
 .button.nemo:pressed    { -fx-background-color: linear-gradient(#87edff, #55deff); }
 
-/*  ────────────────────────────────────────────────────────────
-    combobox / choicebox  (future dropdowns)
-    ──────────────────────────────────────────────────────────── */
 .combo-box, .choice-box {
     -fx-font-size: 18px;
     -fx-background-radius: 12;
@@ -116,13 +99,9 @@
     -fx-border-color: #6bb8ff;
 }
 
-/* items in popup list */
 .list-cell:filled:selected  { -fx-background-color: #cdf0ff; }
 .list-cell:filled:hover     { -fx-background-color: #effaff; }
 
-/*  ────────────────────────────────────────────────────────────
-    menu bar (if you add one)
-    ──────────────────────────────────────────────────────────── */
 .menu-bar {
     -fx-background-color: rgba(255,255,255,0.85);
     -fx-background-radius: 0 0 12 12;

@@ -6,15 +6,19 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="View.VictoryController">
 
-    <!-- top menu -->
+    <!-- general menu -->
     <top>
         <fx:include source="CommonMenu.fxml"/>
     </top>
 
-    <!-- victory message + new‐game button -->
+
     <center>
         <VBox alignment="CENTER" spacing="20">
+
+            <!-- victory message  -->
             <Label text="YOU WON!" styleClass="victory-label"/>
+
+            <!--  new‐game button -->
             <Button text="Ready For Another Round?" onAction="#onNewGame"/>
         </VBox>
     </center>

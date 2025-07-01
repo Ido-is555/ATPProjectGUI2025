@@ -1,5 +1,4 @@
 package ViewModel;
-
 import Model.IModel;
 import algorithms.mazeGenerators.Maze;
 import algorithms.search.Solution;
@@ -12,7 +11,7 @@ public class MyViewModel {
 
     private final IModel model;
 
-    /* --- Properties שה-View מאזין להם --- */
+    // --- Properties that are listened by the Listener ---
     public final IntegerProperty characterRow    = new SimpleIntegerProperty();
     public final IntegerProperty characterColumn = new SimpleIntegerProperty();
     public final BooleanProperty goalReached     = new SimpleBooleanProperty(false);
@@ -23,7 +22,7 @@ public class MyViewModel {
         this.model = model;
     }
 
-    /* ---------- פונקציות שה-View מפעיל ---------- */
+    // --- fetch maze generator ---
     public void generateMaze(int rows, int cols) {
         model.generateMaze(rows, cols);
         syncAll();
@@ -35,6 +34,7 @@ public class MyViewModel {
         goalReached.set(model.isGoalReached());
     }
 
+    // --- fetch maze solution ---
     public void solveMaze() {
         model.solveMaze();
         solutionShown.set(model.getSolution() != null);
@@ -42,7 +42,7 @@ public class MyViewModel {
 
     public void saveMaze(File f) throws Exception { model.saveMaze(f); }
 
-    /* ---------- Getters ל-View ---------- */
+    // --- getters ---
     public Maze getMaze()               { return model.getMaze(); }
     public Solution getSolution()       { return model.getSolution(); }
     public int getCharacterRow()        { return characterRow.get(); }
@@ -50,7 +50,7 @@ public class MyViewModel {
 
     public void shutdown() { model.shutdown(); }
 
-    /* ---------- עזרה ---------- */
+    // --- helper ---
     private void syncAll() {
         syncCharacter();
         goalReached.set(false);
@@ -58,6 +58,7 @@ public class MyViewModel {
         mazeLoaded.set(model.getMaze() != null);
     }
 
+    // --- character synced to chosen theme ---
     private void syncCharacter() {
         characterRow.set(model.getCharacterRow());
         characterColumn.set(model.getCharacterColumn());

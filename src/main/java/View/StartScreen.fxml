@@ -7,12 +7,12 @@
             fx:controller="View.StartScreenController"
             stylesheets="@style.css">
 
-        <!-- menu always up here -->
+        <!-- general menu -->
         <top>
                 <fx:include source="CommonMenu.fxml"/>
         </top>
 
-        <!-- your “glass” card in the center -->
+        <!-- choose themes buttons -->
         <center>
                 <VBox fx:id="glassPane"
                       id="glass-pane"
