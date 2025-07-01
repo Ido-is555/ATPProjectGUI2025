@@ -1,8 +1,10 @@
 package View;
 
+import ViewModel.MyViewModel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import javafx.stage.Modality;
@@ -10,18 +12,43 @@ import javafx.scene.control.MenuItem;
 import java.io.IOException;
 
 public class CommonMenuController {
-    @FXML private MenuItem menuNew, menuSave;
-    @FXML private MenuItem menuProperties, menuScreenshot;
+    @FXML private MenuItem menuSave;
+    @FXML private MenuItem menuProperties;
     @FXML private MenuItem menuExit, menuHelp, menuAbout;
 
 
-    @FXML private void onSave() { /* ... save logic ... */ }
-    @FXML private void onProperties() { /* ... show properties dialog ... */ }
+    @FXML private void onSave() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Save.fxml"));
+            Parent root = loader.load();
+            SaveController controller = loader.getController();
+            controller.init(SceneManager.getViewModel());
+
+            Stage stage = new Stage();
+            stage.setTitle("Save Maze");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, "Could not open Save window.").showAndWait();
+        }
+    }
+    @FXML private void onProperties() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Config.fxml"));
+            Scene scene = new Scene(loader.load(), 400, 300);
+            Stage stage = new Stage();
+            stage.setTitle("Application Properties");
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML private void onExit() {
         // clean shutdown & close window
         Stage s = (Stage) menuExit.getParentPopup().getOwnerWindow();
-        /* viewModel.shutdown() if needed */
         s.close();
     }
     @FXML private void onHelp()    {

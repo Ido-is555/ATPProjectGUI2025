@@ -41,7 +41,6 @@ public class MyViewModel {
     }
 
     public void saveMaze(File f) throws Exception { model.saveMaze(f); }
-    public void loadMaze(File f) throws Exception { model.loadMaze(f); syncAll(); }
 
     /* ---------- Getters ל-View ---------- */
     public Maze getMaze()               { return model.getMaze(); }

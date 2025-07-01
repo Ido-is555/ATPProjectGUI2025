@@ -8,9 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.FileChooser;
-import java.io.File;
-import java.io.IOException;
 
 public class MyViewController implements IView {
 
@@ -107,7 +104,7 @@ public class MyViewController implements IView {
     @Override public void displayVictory()  {
         try {
             AudioManager.get().stopBackground();          // fade loop
-            AudioManager.get().playWin();                 // play win jingle
+            AudioManager.get().playBackground("win");                 // play win jingle
             sceneManager.switchToVictory("style.css");
         } catch (Exception e){
             showError(e.getMessage());

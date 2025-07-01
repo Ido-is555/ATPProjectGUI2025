@@ -54,7 +54,7 @@ public Theme getCurrentTheme(){ return currentTheme; }
 /* כניסות ציבוריות */
 public void switchToStart(ActionEvent e)      throws Exception { AudioManager.get().stopBackground(); go(e,"StartScreen.fxml", "style.css"); }
 public void switchToProperties(ActionEvent e) throws Exception { go(e,"Properties.fxml", styleChose);  }
-public void switchToGame(ActionEvent e)       throws Exception { go(e,"Game.fxml", styleChose);        }
+public void switchToGame(ActionEvent e)       throws Exception { go(e,"MyView.fxml", styleChose);        }
 
 
     // --- special overload: when we reach victory from code (אין ActionEvent) ---

@@ -39,7 +39,4 @@ public class AudioManager {
         if (url == null) return;
         new MediaPlayer(new Media(url.toExternalForm())).play();
     }
-
-    /* convenience wrappers */
-    public void playWin()                  { playOnce("win"); }
 }

@@ -13,11 +13,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 /* --------------------------------------------------------------------- */
-/* ---  MazeDisplayer – walls, 50 % floor, footprints, sprites, path  --- */
+/* ---  MazeDisplayer  --- */
 /* --------------------------------------------------------------------- */
 public class MazeDisplayer {
 
-    /* --- canvas injected from Game.fxml --- */
+    /* --- canvas injected from MyView.fxml --- */
     private final Canvas canvas;
 
     /* --- geometry (updated each draw) --- */
@@ -102,17 +102,8 @@ public class MazeDisplayer {
         for (AState curr : sol.getSolutionPath()) {
             if (prev != null) {
                 int[] p = rc(prev), c = rc(curr);
-                boolean diag = (p[0] != c[0]) && (p[1] != c[1]);
-
-                if (diag) {                                   /* split diagonal */
-                    double midX = p[1]*cellW + cellW/2;
-                    double midY = c[0]*cellH + cellH/2;
-                    gc.strokeLine(p[1]*cellW + cellW/2, p[0]*cellH + cellH/2, midX, midY);
-                    gc.strokeLine(midX, midY, c[1]*cellW + cellW/2, c[0]*cellH + cellH/2);
-                } else {                                      /* orthogonal    */
                     gc.strokeLine(p[1]*cellW + cellW/2, p[0]*cellH + cellH/2,
                             c[1]*cellW + cellW/2, c[0]*cellH + cellH/2);
-                }
             }
             prev = curr;
         }

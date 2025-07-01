@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="View.SaveController"
+            stylesheets="@../View/style.css">
+    <center>
+        <VBox alignment="CENTER" spacing="15" styleClass="glass-pane" maxWidth="300" maxHeight="200">
+            <Label text="Save Maze File"/>
+
+            <TextField fx:id="txtFileName"
+                       promptText="Enter file name"
+                       prefWidth="200"/>
+
+            <Button text="Save"
+                    onAction="#onSaveClicked"
+                    styleClass="theme-btn"/>
+        </VBox>
+    </center>
+</BorderPane>
