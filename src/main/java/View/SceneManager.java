@@ -37,7 +37,9 @@ public class SceneManager {
     Parent root = loader.load();
 
     Object ctrl = loader.getController();
-    if (ctrl instanceof IView v) v.bindViewModel(viewModel);
+        if (ctrl instanceof IView) {
+            ((IView) ctrl).bindViewModel(viewModel);
+        }
 
     stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
     stage.setScene(new Scene(root));
@@ -65,7 +67,7 @@ public void switchToVictory(String style) throws Exception {
 public static void setStage(Stage stage) {
     stage.setWidth(1200);
     stage.setHeight(800);
-    stage.setMinWidth(800);   // אפשרי: גבול תחתון
+    stage.setMinWidth(800);
     stage.setMinHeight(600);
 }
 }

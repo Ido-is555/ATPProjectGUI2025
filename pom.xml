@@ -11,14 +11,46 @@
 
 
     <properties>
+        <javafx.version>16</javafx.version>
+        <maven.compiler.release>15</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javafx.version>17.0.6</javafx.version>
         <junit.version>5.10.2</junit.version>
-        <maven.compiler.release>19</maven.compiler.release>
         <javafx.platform>win</javafx.platform>
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>local.atp</groupId>
+            <artifactId>atp-partb</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/java/ATPProjectJAR.jar</systemPath>
+        </dependency>
+
+        <!-- JavaFX compile-time jars -->
+        <dependency>
+            <groupId>org.openjfx</groupId><artifactId>javafx-controls</artifactId><version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId><artifactId>javafx-fxml</artifactId><version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId><artifactId>javafx-media</artifactId><version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId><artifactId>javafx-swing</artifactId><version>${javafx.version}</version>
+        </dependency>
+
+        <!-- JavaFX native runtime jars (Windows example) -->
+        <dependency>
+            <groupId>org.openjfx</groupId><artifactId>javafx-media</artifactId>
+            <version>${javafx.version}</version><classifier>${javafx.platform}</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId><artifactId>javafx-swing</artifactId>
+            <version>${javafx.version}</version><classifier>${javafx.platform}</classifier>
+        </dependency>
         <!-- local ATP JAR -->
         <dependency>
             <groupId>local.atp</groupId>
